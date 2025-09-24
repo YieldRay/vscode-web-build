@@ -34,8 +34,8 @@
 
 	<!-- Startup (do not modify order of script tags!) -->
 	<script>
-		const baseUrl = new URL('.', window.location.origin).toString();
-		globalThis._VSCODE_FILE_ROOT = baseUrl + '/out-vscode-web/';
+		const baseUrl = new URL('./out-vscode-web/', window.location.href);
+		globalThis._VSCODE_FILE_ROOT = baseUrl.origin + baseUrl.pathname;
 	</script>
 	<script>
 		performance.mark('code/willLoadWorkbenchMain');
@@ -132,12 +132,6 @@ class LocalStorageURLCallbackProvider extends Disposable {
         this.lastTimeChecked = Date.now();
         this.checkCallbacksTimeout = undefined;
     }
-	_register(o) {
-		if (o === this) {
-			throw new Error('Cannot register a disposable on itself!');
-		}
-		return this.q.add(o);
-	}
     create(options = {}) {
         const id = ++LocalStorageURLCallbackProvider.REQUEST_ID;
         const queryParams = [`vscode-reqid=${id}`];

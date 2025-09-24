@@ -1,9 +1,8 @@
 {
   "name": "vscode-web-build",
-  "version": "1.104.1",
+  "version": "1.104.2",
   "files": [
-    "./out-vscode-web",
-    "./resources",
-    "index.html"
+    "!.gitignore",
+    "*"
   ]
 }
