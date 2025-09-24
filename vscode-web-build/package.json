@@ -1,0 +1,9 @@
+{
+  "name": "vscode-web-build",
+  "version": "1.104.1",
+  "files": [
+    "./out-vscode-web",
+    "./resources",
+    "index.html"
+  ]
+}
