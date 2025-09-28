@@ -1,4 +1,5 @@
 *
 !.gitignore
-!index.html
 !package.json
+!index.html
+!workbench.js
