@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 // source: src/vs/code/browser/workbench/workbench.ts
-import product, { Emitter, Disposable, URI, create } from './out-vscode-web/vs/workbench/workbench.web.main.internal.js';
+import product, { Emitter, Disposable, URI, create } from './out/vs/workbench/workbench.web.main.internal.js';
 
 const mainWindow = window;
 function isEqual(a, b) {

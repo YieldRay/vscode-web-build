@@ -11,7 +11,7 @@
 		<meta name="mobile-web-app-capable" content="yes" />
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<meta name="apple-mobile-web-app-title" content="Code">
-		<link rel="apple-touch-icon" href="./resources/server/code-192.png" />
+		<link rel="apple-touch-icon" href="./code-192.png" />
 
 		<!-- Disable pinch zooming -->
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
@@ -23,9 +23,9 @@
 		<meta id="vscode-workbench-auth-session" data-settings="{{WORKBENCH_AUTH_SESSION}}">
 
 		<!-- Workbench Icon/Manifest/CSS -->
-		<link rel="icon" href="./resources/server/favicon.ico" type="image/x-icon" />
-		<link rel="manifest" href="./resources/server/manifest.json" crossorigin="use-credentials" />
-		<link rel="stylesheet" href="./out-vscode-web/vs/workbench/workbench.web.main.internal.css">
+		<link rel="icon" href="./favicon.ico" type="image/x-icon" />
+		<link rel="manifest" href="./manifest.json" crossorigin="use-credentials" />
+		<link rel="stylesheet" href="./out/vs/workbench/workbench.web.main.internal.css">
 
 	</head>
 
@@ -35,15 +35,15 @@
 	<!-- Startup (do not modify order of script tags!) -->
 	<script>
 		const baseUrl = new URL('.', window.location.origin).toString();
-		globalThis._VSCODE_FILE_ROOT = baseUrl + '/out-vscode-web/';
+		globalThis._VSCODE_FILE_ROOT = baseUrl + '/out/';
 	</script>
 	<script>
 		performance.mark('code/willLoadWorkbenchMain');
 	</script>
 	<!-- always ensure built in english NLS messages -->
-	<script type="module" src="./out-vscode-web/nls.messages.js"></script>
+	<script type="module" src="./out/nls.messages.js"></script>
 	<!-- attempt to load NLS messages in case non-english -->
-	<script type="module" src="./out-vscode-web/nls.messages.js"></script>
+	<script type="module" src="./out/nls.messages.js"></script>
 	<script type="module">
 		import init from './workbench.js';
 		init();

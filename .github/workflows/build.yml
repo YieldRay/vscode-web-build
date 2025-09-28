@@ -99,9 +99,9 @@ jobs:
 
       - name: Copy build
         run: |
-          cp -R vscode/resources vscode-web-build/
+          rsync -tv vscode/resources/server/* vscode-web-build/
           cp -R vscode/node_modules vscode-web-build/
-          cp -R vscode/out-vscode-web vscode-web-build/
+          cp -R vscode/out-vscode-web vscode-web-build/out
           cp -R vscode/.build/web/extensions vscode-web-build/
           cd vscode-web-build && npm version "${{ needs.check_update.outputs.latest_tag }}" --no-git-tag-version
 
@@ -135,6 +135,6 @@ jobs:
         with:
           tag_name: v${{ needs.check_update.outputs.latest_tag }}
           draft: false
-          generate_release_notes: true
+          generate_release_notes: false
           files: |
             vscode-web-build/*.tgz
