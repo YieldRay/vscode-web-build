@@ -99,10 +99,15 @@ jobs:
 
       - name: Copy build
         run: |
-          rsync -tv vscode/resources/server/* vscode-web-build/
-          cp -R vscode/node_modules vscode-web-build/
-          cp -R vscode/out-vscode-web vscode-web-build/out
-          cp -R vscode/.build/web/extensions vscode-web-build/
+          deps_list=$(jq '.dependencies // {} | keys' vscode/remote/web/package.json)
+          jq --argjson L "$deps_list" '.bundledDependencies = $L' vscode-web-build/package.json > vscode-web-build/package.json.tmp
+          cat vscode-web-build/package.json.tmp
+          mv vscode-web-build/package.json.tmp vscode-web-build/package.json
+
+          cp -vR vscode/remote/web/node_modules vscode-web-build/
+          cp -vR vscode/out-vscode-web vscode-web-build/out
+          cp -vR vscode/.build/web/extensions vscode-web-build/
+          rsync -vt vscode/resources/server/* vscode-web-build/
           cd vscode-web-build && npm version "${{ needs.check_update.outputs.latest_tag }}" --no-git-tag-version
 
       - name: Setup Pages

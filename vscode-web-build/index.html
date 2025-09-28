@@ -34,8 +34,8 @@
 
 	<!-- Startup (do not modify order of script tags!) -->
 	<script>
-		const baseUrl = new URL('.', window.location.origin).toString();
-		globalThis._VSCODE_FILE_ROOT = baseUrl + '/out/';
+		const baseUrl = new URL('./out/', window.location.href);
+		globalThis._VSCODE_FILE_ROOT = baseUrl.origin + baseUrl.pathname;
 	</script>
 	<script>
 		performance.mark('code/willLoadWorkbenchMain');

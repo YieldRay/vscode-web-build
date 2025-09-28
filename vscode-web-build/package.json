@@ -1,8 +1,9 @@
 {
   "name": "vscode-web-build",
-  "version": "1.104.2",
+  "version": "0.0.0",
   "files": [
     "!.gitignore",
+    "node_modules/",
     "*"
   ]
 }
