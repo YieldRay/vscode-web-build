@@ -145,8 +145,11 @@ jobs:
 
       - name: Package build
         run: |
-          cd vscode-web-build && cat package.json
-          cd vscode-web-build && npm pack
+          ls -ahlF vscode-web-build
+          cd vscode-web-build
+          cat package.json
+          npm pack
+          cd ..
 
       - name: Release on GitHub
         uses: softprops/action-gh-release@v1
