@@ -99,7 +99,6 @@ jobs:
           cd vscode
           npm run gulp compile-build-without-mangling # out-build
           npm run gulp vscode-web-ci                  # out-vscode-web .build/web/extensions
-          cd ..
 
       - name: Copy build
         run: |
@@ -121,26 +120,40 @@ jobs:
 
           cd vscode-web-build && npm version "${{ needs.check_update.outputs.latest_tag }}" --no-git-tag-version
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
+      # - name: Setup Pages
+      #   uses: actions/configure-pages@v4
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: "./vscode-web-build"
+      # - name: Upload artifact
+      #   uses: actions/upload-pages-artifact@v3
+      #   with:
+      #     path: "./vscode-web-build"
 
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      # - name: Deploy to GitHub Pages
+      #   id: deployment
+      #   uses: actions/deploy-pages@v4
 
       - name: Commit and push version bump
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global init.defaultBranch main
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add -A
           # git commit --allow-empty --author="github-actions[bot] <github-actions[bot]@users.noreply.github.com>"
           git commit -m "chore: bump version to ${{ needs.check_update.outputs.latest_tag }}"
           git push origin HEAD:${GITHUB_REF_NAME}
+
+          origin="https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git"          
+          tmp_dir=$(mktemp -d -t vscode-web-build-XXX)
+          cp -R vscode-web-build/* $tmp_dir
+          cd $tmp_dir
+          git init
+          git branch -M gh-pages
+          git remote add origin $origin
+          git add -A
+          git commit --allow-empty-message -m "${{ needs.check_update.outputs.latest_tag }}"
+          git push -f origin gh-pages
 
       - name: Package build
         run: |
@@ -148,7 +161,6 @@ jobs:
           cd vscode-web-build
           cat package.json
           npm pack
-          cd ..
 
       - name: Release on GitHub
         uses: softprops/action-gh-release@v1
