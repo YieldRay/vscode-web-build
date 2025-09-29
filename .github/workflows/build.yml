@@ -103,6 +103,8 @@ jobs:
 
       - name: Copy build
         run: |
+          node nls.mjs
+
           deps_json=$(jq '.dependencies // {}' vscode/remote/web/package.json)
           deps_keys=$(jq '.dependencies // {} | keys' vscode/remote/web/package.json)
           jq --argjson deps "$deps_json" --argjson bundled "$deps_keys" '
@@ -116,13 +118,6 @@ jobs:
           cp -vR vscode/out-vscode-web vscode-web-build/out
           cp -vR vscode/.build/web/extensions vscode-web-build/
           rsync -vt vscode/resources/server/* vscode-web-build/
-
-          for lang in $(ls vscode-loc/i18n/vscode-language-pack-*/translations/main.i18n.json | sed 's|^vscode-loc/i18n/vscode-language-pack-\(.*\)/translations/main.i18n.json$|\1|'); do
-            mkdir -p vscode-web-build/nls/"$lang"
-            echo -n 'globalThis._VSCODE_NLS_MESSAGES=' > vscode-web-build/nls/"$lang"/nls.messages.js
-            cat vscode-loc/i18n/vscode-language-pack-"$lang"/translations/main.i18n.json >> vscode-web-build/nls/"$lang"/nls.messages.js
-            echo >> vscode-web-build/nls/"$lang"/nls.messages.js
-          done
 
           cd vscode-web-build && npm version "${{ needs.check_update.outputs.latest_tag }}" --no-git-tag-version
 
