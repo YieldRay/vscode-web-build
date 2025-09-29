@@ -13,6 +13,7 @@ import process from "node:process";
 import path from "node:path";
 import fs from "node:fs";
 
+const REPO = "code-oss";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 process.chdir(__dirname);
@@ -62,16 +63,14 @@ for (const languageId of Object.keys(languageContentsMap)) {
 
   for (const [file, keys] of nlsKeys) {
     for (const key of keys) {
-      langMessages.push(
-        contents[file]?.[key] ?? nlsMessages[langMessages.length]
-      );
+      langMessages.push(contents[file]?.[key] ?? nlsMessages[langMessages.length]);
     }
   }
   if (langMessages.length !== nlsMessages.length) {
     throw new Error(`Invalid nls messages for ${languageId}`);
   }
 
-  const nslDirPath = path.join(__dirname, `vscode-web-build/nls/${languageId}`);
+  const nslDirPath = path.join(__dirname, REPO, "nls", languageId);
   fs.mkdirSync(nslDirPath, { recursive: true });
   fs.writeFileSync(
     path.join(nslDirPath, "nls.messages.js"),

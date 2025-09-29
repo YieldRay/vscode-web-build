@@ -41,14 +41,14 @@ jobs:
       - name: Get current package.json version
         id: get_current_version
         run: |
-          cd vscode-web-build
+          cd code-oss
           CURRENT_VERSION=$(jq -r .version package.json)
           echo "current_version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
 
       - name: Check and update version
         id: check
         run: |
-          cd vscode-web-build
+          cd code-oss
           CURRENT_VERSION="${{ steps.get_current_version.outputs.current_version }}"
           LATEST_TAG="${{ steps.get_release_tag.outputs.latest_tag }}"
           INPUT_VERSION="${{ github.event.inputs.version }}"
@@ -109,16 +109,16 @@ jobs:
           jq --argjson deps "$deps_json" --argjson bundled "$deps_keys" '
             .dependencies = $deps
             | .bundledDependencies = $bundled
-          ' vscode-web-build/package.json > vscode-web-build/package.json.tmp
-          cat vscode-web-build/package.json.tmp
-          mv vscode-web-build/package.json.tmp vscode-web-build/package.json
+          ' code-oss/package.json > code-oss/package.json.tmp
+          cat code-oss/package.json.tmp
+          mv code-oss/package.json.tmp code-oss/package.json
 
-          cp -vR vscode/remote/web/node_modules vscode-web-build/
-          cp -vR vscode/out-vscode-web vscode-web-build/out
-          cp -vR vscode/.build/web/extensions vscode-web-build/
-          rsync -vt vscode/resources/server/* vscode-web-build/
+          cp -vR vscode/remote/web/node_modules code-oss/
+          cp -vR vscode/out-vscode-web code-oss/out
+          cp -vR vscode/.build/web/extensions code-oss/
+          rsync -vt vscode/resources/server/* code-oss/
 
-          cd vscode-web-build && npm version "${{ needs.check_update.outputs.latest_tag }}" --no-git-tag-version
+          cd code-oss && npm version "${{ needs.check_update.outputs.latest_tag }}" --no-git-tag-version
 
       # - name: Setup Pages
       #   uses: actions/configure-pages@v4
@@ -126,7 +126,7 @@ jobs:
       # - name: Upload artifact
       #   uses: actions/upload-pages-artifact@v3
       #   with:
-      #     path: "./vscode-web-build"
+      #     path: "./code-oss"
 
       # - name: Deploy to GitHub Pages
       #   id: deployment
@@ -145,8 +145,8 @@ jobs:
           git push origin HEAD:${GITHUB_REF_NAME}
 
           origin="https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git"          
-          tmp_dir=$(mktemp -d -t vscode-web-build-XXX)
-          cp -R vscode-web-build/* $tmp_dir
+          tmp_dir=$(mktemp -d -t code-oss-XXX)
+          cp -R code-oss/* $tmp_dir
           cd $tmp_dir
           git init
           git branch -M gh-pages
@@ -157,10 +157,19 @@ jobs:
 
       - name: Package build
         run: |
-          ls -ahlF vscode-web-build
-          cd vscode-web-build
+          ls -ahlF code-oss
+          cp README.md code-oss/
+          cd code-oss
           cat package.json
           npm pack
+
+      - name: Publishing on NPM
+        uses: JS-DevTools/npm-publish@v4
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
+          package: ./code-oss
+          access: public
+          provenance: true
 
       - name: Release on GitHub
         uses: softprops/action-gh-release@v1
@@ -169,4 +178,4 @@ jobs:
           draft: false
           generate_release_notes: false
           files: |
-            vscode-web-build/*.tgz
+            code-oss/code-oss-*.tgz

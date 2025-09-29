@@ -1,6 +1,6 @@
 *
 !/.gitignore
 !/.github/
-!/vscode-web-build/
+!/code-oss/
 !/README.md
 !/nls.mjs
