@@ -103,8 +103,12 @@ jobs:
 
       - name: Copy build
         run: |
-          deps_list=$(jq '.dependencies // {} | keys' vscode/remote/web/package.json)
-          jq --argjson L "$deps_list" '.bundledDependencies = $L' vscode-web-build/package.json > vscode-web-build/package.json.tmp
+          deps_json=$(jq '.dependencies // {}' vscode/remote/web/package.json)
+          deps_keys=$(jq '.dependencies // {} | keys' vscode/remote/web/package.json)
+          jq --argjson deps "$deps_json" --argjson bundled "$deps_keys" '
+            .dependencies = $deps
+            | .bundledDependencies = $bundled
+          ' vscode-web-build/package.json > vscode-web-build/package.json.tmp
           cat vscode-web-build/package.json.tmp
           mv vscode-web-build/package.json.tmp vscode-web-build/package.json
 
@@ -154,7 +158,7 @@ jobs:
       - name: Release on GitHub
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: v${{ needs.check_update.outputs.latest_tag }}
+          tag_name: ${{ needs.check_update.outputs.latest_tag }}
           draft: false
           generate_release_notes: false
           files: |
