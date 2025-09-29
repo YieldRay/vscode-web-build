@@ -78,6 +78,10 @@ jobs:
           repository: microsoft/vscode
           ref: ${{ needs.check_update.outputs.latest_tag }}
           path: vscode
+      - uses: actions/checkout@v5
+        with:
+          repository: microsoft/vscode-loc
+          path: vscode-loc
 
       - name: Setup Node.js
         uses: actions/setup-node@v5
@@ -108,6 +112,14 @@ jobs:
           cp -vR vscode/out-vscode-web vscode-web-build/out
           cp -vR vscode/.build/web/extensions vscode-web-build/
           rsync -vt vscode/resources/server/* vscode-web-build/
+
+          for lang in $(ls vscode-loc/i18n/vscode-language-pack-*/translations/main.i18n.json | sed 's|^vscode-loc/i18n/vscode-language-pack-\(.*\)/translations/main.i18n.json$|\1|'); do
+            mkdir -p vscode-web-build/nls/"$lang"
+            echo -n 'globalThis._VSCODE_NLS_MESSAGES=' > vscode-web-build/nls/"$lang"/nls.messages.js
+            cat vscode-loc/i18n/vscode-language-pack-"$lang"/translations/main.i18n.json >> vscode-web-build/nls/"$lang"/nls.messages.js
+            echo >> vscode-web-build/nls/"$lang"/nls.messages.js
+          done
+
           cd vscode-web-build && npm version "${{ needs.check_update.outputs.latest_tag }}" --no-git-tag-version
 
       - name: Setup Pages
@@ -133,6 +145,7 @@ jobs:
 
       - name: Package build
         run: |
+          cd vscode-web-build && cat package.json
           cd vscode-web-build && npm pack
 
       - name: Release on GitHub

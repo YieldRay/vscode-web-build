@@ -1,6 +1,11 @@
 {
   "name": "vscode-web-build",
   "version": "0.0.0",
+  "type": "module",
+  "keywords": [
+    "vscode",
+    "vscode-web"
+  ],
   "files": [
     "!.gitignore",
     "node_modules/",
