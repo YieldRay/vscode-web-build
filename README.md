@@ -4,7 +4,7 @@
 [![GitHub Release](https://img.shields.io/github/v/release/YieldRay/code-oss)](https://github.com/YieldRay/code-oss/releases)
 [![NPM](https://img.shields.io/npm/v/code-oss)](https://www.npmjs.com/package/code-oss)
 
-This project produces a [VSCode OSS](https://github.com/microsoft/vscode) build **without mangling or minification**.
+This project produces a [VSCode OSS](https://github.com/microsoft/vscode) web build **without mangling or minification**.
 
 To get the official build, please use [this link](https://update.code.visualstudio.com/api/update/web-standalone/stable/latest), see also [@vscode/test-web](https://github.com/microsoft/vscode-test-web/blob/main/src/server/download.ts).
 

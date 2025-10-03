@@ -6,6 +6,7 @@
     "vscode",
     "vscode-web"
   ],
+  "description": "VSCode OSS web build",
   "publishConfig": {
     "registry": "https://registry.npmjs.org"
   },
