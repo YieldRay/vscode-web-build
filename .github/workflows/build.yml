@@ -110,6 +110,13 @@ jobs:
           sudo apt-get install build-essential g++ libx11-dev libxkbfile-dev libsecret-1-dev libkrb5-dev python-is-python3
           cd vscode && npm ci
 
+      - name: Patch Copilot session wrapper typing
+        run: |
+          target_file="vscode/src/vs/platform/agentHost/node/copilot/copilotSessionWrapper.ts"
+          if grep -q "readonly onUnhandledEvent" "$target_file"; then
+            perl -0pi -e "s/readonly onUnhandledEvent\\s*=\\s*this\\._onUnhandledEvent\\.event;/readonly onUnhandledEvent: Event<SessionEvent> = this._onUnhandledEvent.event;/" "$target_file"
+          fi
+
       - name: Build VSCode Web
         run: |
           cd vscode
